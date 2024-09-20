@@ -23,26 +23,5 @@ namespace FleshClone
             ServiceBase.Run(ServicesToRun);
 
         }
-        public partial class UsbMonitorService : ServiceBase
-        {
-            private ManagementEventWatcher _watcher;
-
-
-
-            private void USBDeviceInserted(object sender, EventArrivedEventArgs e)
-            {
-                // Здесь логика копирования данных или бэкапа
-            }
-
-            protected override void OnStop()
-            {
-                if (_watcher != null)
-                {
-                    _watcher.Stop();
-                    _watcher.Dispose();
-                }
-            }
-        }
-
     }
 }
