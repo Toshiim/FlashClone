@@ -5,6 +5,8 @@ using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
 using System.Management;
+using System.Windows.Forms;
+
 
 namespace FleshClone
 {
@@ -13,14 +15,21 @@ namespace FleshClone
         /// <summary>
         /// Главная точка входа для приложения.
         /// </summary>
+        
+        [STAThread] // Удалить после
         static void Main()
         {
-            ServiceBase[] ServicesToRun;
-            ServicesToRun = new ServiceBase[]
-            {
-                new Service1()
-            };
-            ServiceBase.Run(ServicesToRun);
+
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new FlashClone());
+
+            //ServiceBase[] ServicesToRun;
+            //ServicesToRun = new ServiceBase[]
+            //{
+            //    new Service1()
+            //};
+            //ServiceBase.Run(ServicesToRun);
 
         }
     }

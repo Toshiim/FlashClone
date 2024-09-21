@@ -12,6 +12,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using static System.Windows.Forms.LinkLabel;
+using System.Management;
 
 namespace FleshClone
 {
@@ -34,6 +35,7 @@ namespace FleshClone
                 File.Create(cfg).Dispose();
                 string[] lines = {
                     "FID: ND",
+                    "Name ND",
                     "OriginalPath: ND",
                     "ReservPath: ND"
                 };
@@ -62,9 +64,66 @@ namespace FleshClone
 
                 if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
                 {
-                    CfgUpdater("OriginalPath", $"{folderBrowserDialog1.SelectedPath}");
+                    string flashPath = folderBrowserDialog1.SelectedPath;
+                    CfgUpdater("OriginalPath", $"{flashPath}");
+                    string driverLetter = flashPath[0].ToString();
+                    CfgUpdater("FID", GetVolumeSerialNumber(driverLetter));
+                    CfgUpdater("Name", GetDeviceName(driverLetter));
+                }
+
+            }
+        }
+        static string GetVolumeSerialNumber(string driveLetter)
+        {
+            try
+            {
+                string query = $"SELECT * FROM Win32_LogicalDisk WHERE DeviceID = '{driveLetter}:'";
+
+                using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(query))
+                {
+                    foreach (ManagementObject disk in searcher.Get())
+                    {
+                        // Получение серийного номера
+                        return disk["VolumeSerialNumber"]?.ToString();
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка: {ex.Message}");
+            }
+
+            return null; 
+        }
+        static string GetDeviceName(string driveLetter)
+        {
+            try
+            {
+                // Шаг 1: Получаем PartitionID, соответствующий букве диска
+                string partitionQuery = $"ASSOCIATORS OF {{Win32_LogicalDisk.DeviceID='{driveLetter}:'}} WHERE AssocClass=Win32_LogicalDiskToPartition";
+                using (ManagementObjectSearcher partitionSearcher = new ManagementObjectSearcher(partitionQuery))
+                {
+                    foreach (ManagementObject partition in partitionSearcher.Get())
+                    {
+                        // Шаг 2: Получаем физический диск, связанный с этим разделом
+                        string diskQuery = $"ASSOCIATORS OF {{Win32_DiskPartition.DeviceID='{partition["DeviceID"]}'}} WHERE AssocClass=Win32_DiskDriveToDiskPartition";
+                        using (ManagementObjectSearcher diskSearcher = new ManagementObjectSearcher(diskQuery))
+                        {
+                            foreach (ManagementObject disk in diskSearcher.Get())
+                            {
+                                // Возвращаем название устройства
+                                return disk["Model"]?.ToString();
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка: {ex.Message}");
+            }
+
+            return null; // Возвращает null, если название устройства не найдено
         }
 
 
