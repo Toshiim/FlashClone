@@ -28,14 +28,15 @@ namespace FleshClone
         {
             if (File.Exists(cfg))
             {
-                //Загрузить и отобразить
+                FlashName.Text = GetCfg("Name");
+                FIDLabel.Text = GetCfg("FID");
             }
             else
             {
                 File.Create(cfg).Dispose();
                 string[] lines = {
                     "FID: ND",
-                    "Name ND",
+                    "Name: ND",
                     "OriginalPath: ND",
                     "ReservPath: ND"
                 };
@@ -72,6 +73,24 @@ namespace FleshClone
                 }
 
             }
+        }
+        private string GetCfg(string keyName)
+        {
+            string[] lines = File.ReadAllLines(cfg);
+            string pattern = $@"^{keyName}:.*";
+            foreach (string line in lines)
+            {
+                if(Regex.IsMatch(line, pattern))
+                {
+                    string respons = "";
+                    for(int i = keyName.Length + 2; i < line.Length; i++)
+                    {
+                        respons += line[i].ToString();
+                    }
+                    return respons;
+                }
+            }
+            return null;
         }
         static string GetVolumeSerialNumber(string driveLetter)
         {
