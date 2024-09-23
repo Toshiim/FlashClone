@@ -28,8 +28,7 @@ namespace FleshClone
         {
             if (File.Exists(cfg))
             {
-                FlashName.Text = GetCfg("Name");
-                FIDLabel.Text = GetCfg("FID");
+                ShowCfg();
             }
             else
             {
@@ -73,6 +72,13 @@ namespace FleshClone
                 }
 
             }
+        }
+        private void ShowCfg()
+        {
+            FlashName.Text = GetCfg("Name");
+            FIDLabel.Text = GetCfg("FID");
+            Opath.Text = GetCfg("OriginalPath");
+            Spath.Text = GetCfg("ReservPath");
         }
         private string GetCfg(string keyName)
         {

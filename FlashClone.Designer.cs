@@ -33,6 +33,8 @@
             this.button2 = new System.Windows.Forms.Button();
             this.FlashName = new System.Windows.Forms.Label();
             this.FIDLabel = new System.Windows.Forms.Label();
+            this.Opath = new System.Windows.Forms.Label();
+            this.Spath = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // button1
@@ -60,22 +62,44 @@
             this.FlashName.AutoSize = true;
             this.FlashName.Location = new System.Drawing.Point(375, 9);
             this.FlashName.Name = "FlashName";
-            this.FlashName.Size = new System.Drawing.Size(0, 13);
+            this.FlashName.Size = new System.Drawing.Size(17, 13);
             this.FlashName.TabIndex = 5;
+            this.FlashName.Text = "|||||";
             // 
             // FIDLabel
             // 
             this.FIDLabel.AutoSize = true;
             this.FIDLabel.Location = new System.Drawing.Point(375, 50);
             this.FIDLabel.Name = "FIDLabel";
-            this.FIDLabel.Size = new System.Drawing.Size(0, 13);
+            this.FIDLabel.Size = new System.Drawing.Size(17, 13);
             this.FIDLabel.TabIndex = 6;
+            this.FIDLabel.Text = "|||||";
+            // 
+            // Opath
+            // 
+            this.Opath.AutoSize = true;
+            this.Opath.Location = new System.Drawing.Point(52, 248);
+            this.Opath.Name = "Opath";
+            this.Opath.Size = new System.Drawing.Size(15, 13);
+            this.Opath.TabIndex = 7;
+            this.Opath.Text = "||||";
+            // 
+            // Spath
+            // 
+            this.Spath.AutoSize = true;
+            this.Spath.Location = new System.Drawing.Point(52, 290);
+            this.Spath.Name = "Spath";
+            this.Spath.Size = new System.Drawing.Size(21, 13);
+            this.Spath.TabIndex = 8;
+            this.Spath.Text = "|||||||";
             // 
             // FlashClone
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(493, 574);
+            this.Controls.Add(this.Spath);
+            this.Controls.Add(this.Opath);
             this.Controls.Add(this.FIDLabel);
             this.Controls.Add(this.FlashName);
             this.Controls.Add(this.button2);
@@ -94,5 +118,7 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label FlashName;
         private System.Windows.Forms.Label FIDLabel;
+        private System.Windows.Forms.Label Opath;
+        private System.Windows.Forms.Label Spath;
     }
 }
