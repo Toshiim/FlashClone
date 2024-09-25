@@ -75,8 +75,8 @@ namespace FleshClone
         }
         private void ShowCfg()
         {
-            FlashName.Text = GetCfg("Name");
             FIDLabel.Text = GetCfg("FID");
+            FlashName.Text = GetCfg("Name");
             Opath.Text = GetCfg("OriginalPath");
             Spath.Text = GetCfg("ReservPath");
         }
@@ -148,7 +148,7 @@ namespace FleshClone
                 Console.WriteLine($"Ошибка: {ex.Message}");
             }
 
-            return null; // Возвращает null, если название устройства не найдено
+            return null; 
         }
 
 
