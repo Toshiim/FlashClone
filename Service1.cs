@@ -62,14 +62,16 @@ namespace FleshClone
         }
         private void LoadCFG()
         {
+            string[] buffer;
             string[] lines = File.ReadAllLines(cfg);
-            for (int i = 0;  i < lines.Length; i++)
-            {
-                switch (i)
-                {
- 
-                }
-            }
+            buffer = lines[0].Split(':');
+            FID = buffer[1];
+            buffer = lines[1].Split(':');
+            Name = buffer[1];
+            buffer = lines[2].Split(':');
+            OriginalPath = buffer[1];
+            buffer = lines[3].Split(':');
+            ReservPath = buffer[1];
         }
         //подумать о реализации через split
         //private string FarmatingF(string fstr)
