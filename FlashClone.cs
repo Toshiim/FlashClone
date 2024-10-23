@@ -43,7 +43,7 @@ namespace FleshClone
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void buttonBackUp_Click(object sender, EventArgs e)
         {
             using (FolderBrowserDialog folderBrowserDialog1 = new FolderBrowserDialog())
             {
@@ -54,25 +54,9 @@ namespace FleshClone
                     CfgUpdater("ReservPath", $"{folderBrowserDialog1.SelectedPath}");
                 }
             }
+            ShowCfg();
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            using (FolderBrowserDialog folderBrowserDialog1 = new FolderBrowserDialog())
-            {
-                folderBrowserDialog1.Description = "Select a folder on Flash-card to saving it";
-
-                if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
-                {
-                    string flashPath = folderBrowserDialog1.SelectedPath;
-                    CfgUpdater("OriginalPath", $"{flashPath}");
-                    string driverLetter = flashPath[0].ToString();
-                    CfgUpdater("FID", GetVolumeSerialNumber(driverLetter));
-                    CfgUpdater("Name", GetDeviceName(driverLetter));
-                }
-
-            }
-        }
         private void ShowCfg()
         {
             FIDLabel.Text = GetCfg("FID");
@@ -171,6 +155,24 @@ namespace FleshClone
             File.WriteAllLines(cfg, lines);
 
         }
-            
+
+        private void ButtonOriginal_Click(object sender, EventArgs e)
+        {
+            using (FolderBrowserDialog folderBrowserDialog1 = new FolderBrowserDialog())
+            {
+                folderBrowserDialog1.Description = "Select a folder on Flash-card to saving it";
+
+                if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    string flashPath = folderBrowserDialog1.SelectedPath;
+                    CfgUpdater("OriginalPath", $"{flashPath}");
+                    string driverLetter = flashPath[0].ToString();
+                    CfgUpdater("FID", GetVolumeSerialNumber(driverLetter));
+                    CfgUpdater("Name", GetDeviceName(driverLetter));
+                }
+
+            }
+            ShowCfg();
+        }
     }
 }
