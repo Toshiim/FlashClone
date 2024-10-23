@@ -57,9 +57,19 @@ namespace FleshClone
 
             foreach (ManagementObject device in searcher.Get())
             {
-
+                if (device?["VolumeSerialNumber"]?.ToString() == FID)
+                {
+                    USBReservCopyFiles();
+                }
             }
         }
+        private void USBReservCopyFiles()
+        {
+            //https://metanit.com/sharp/tutorial/5.2.php
+            //string[] originalFiles = Directory.GetFileSystemEntries(OriginalPath);
+        }
+
+
         private void LoadCFG()
         {
             string[] buffer;

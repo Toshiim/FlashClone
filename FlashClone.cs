@@ -56,7 +56,23 @@ namespace FleshClone
             }
             ShowCfg();
         }
+        private void ButtonOriginal_Click(object sender, EventArgs e)
+        {
+            using (FolderBrowserDialog folderBrowserDialog1 = new FolderBrowserDialog())
+            {
+                folderBrowserDialog1.Description = "Select a folder on Flash-card to saving it";
 
+                if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    string flashPath = folderBrowserDialog1.SelectedPath;
+                    CfgUpdater("OriginalPath", $"{flashPath}");
+                    string driverLetter = flashPath[0].ToString();
+                    CfgUpdater("FID", GetVolumeSerialNumber(driverLetter));
+                    CfgUpdater("Name", GetDeviceName(driverLetter));
+                }
+            }
+            ShowCfg();
+        }
         private void ShowCfg()
         {
             FIDLabel.Text = GetCfg("FID");
@@ -90,11 +106,8 @@ namespace FleshClone
 
                 using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(query))
                 {
-                    foreach (ManagementObject disk in searcher.Get())
-                    {
-                        // Получение серийного номера
-                        return disk["VolumeSerialNumber"]?.ToString();
-                    }
+                    ManagementObject disk = searcher.Get().Cast<ManagementObject>().FirstOrDefault();
+                    return disk?["VolumeSerialNumber"]?.ToString();
                 }
             }
             catch (Exception ex)
@@ -135,8 +148,6 @@ namespace FleshClone
             return null; 
         }
 
-
-
         private void CfgUpdater(string keyName, string newData)
         {
             string[] lines = File.ReadAllLines(cfg);
@@ -156,23 +167,6 @@ namespace FleshClone
 
         }
 
-        private void ButtonOriginal_Click(object sender, EventArgs e)
-        {
-            using (FolderBrowserDialog folderBrowserDialog1 = new FolderBrowserDialog())
-            {
-                folderBrowserDialog1.Description = "Select a folder on Flash-card to saving it";
 
-                if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
-                {
-                    string flashPath = folderBrowserDialog1.SelectedPath;
-                    CfgUpdater("OriginalPath", $"{flashPath}");
-                    string driverLetter = flashPath[0].ToString();
-                    CfgUpdater("FID", GetVolumeSerialNumber(driverLetter));
-                    CfgUpdater("Name", GetDeviceName(driverLetter));
-                }
-
-            }
-            ShowCfg();
-        }
     }
 }
