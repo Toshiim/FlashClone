@@ -65,7 +65,7 @@ namespace FleshClone
         }
         private void USBReservCopyFiles()
         {
-            //https://metanit.com/sharp/tutorial/5.2.php
+            //https://learn.microsoft.com/en-us/dotnet/api/system.io.directory?view=net-8.0
             //string[] originalFiles = Directory.GetFileSystemEntries(OriginalPath);
         }
 
