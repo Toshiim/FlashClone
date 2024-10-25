@@ -13,12 +13,15 @@ using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using static System.Windows.Forms.LinkLabel;
 using System.Management;
+using Tomlyn;
+using Tomlyn.Model;
 
 namespace FleshClone
 {
     public partial class FlashClone : Form
     {
         protected string cfg = "cfg.txt";
+        protected string registred = "registred.toml";
         public FlashClone()
         {
             InitializeComponent();
@@ -72,6 +75,40 @@ namespace FleshClone
                 }
             }
             ShowCfg();
+            var toml = new TomlTable();
+            string originalPath = Opath.Text;//жуткий костыль
+            FilesRegistration(originalPath, toml);
+            var tomlOut = Toml.FromModel(toml);
+            File.WriteAllText(registred, tomlOut);
+        }
+        private void FilesRegistration(string OriginalPath, TomlTable toml) //call FilesAppend for all of directorys
+        {
+
+            FilesAppend(OriginalPath, toml);
+            string[] originalSubDirectories = Directory.GetDirectories(OriginalPath);
+            foreach (string directory in originalSubDirectories)
+            {
+                FilesRegistration(directory, toml);
+            }
+        }
+        private void FilesAppend(string OriginalPath, TomlTable toml)//registred all files
+        {
+            string[] originalFiles = Directory.GetFiles(OriginalPath);//what if no files??
+
+            foreach (string file in originalFiles)
+            {
+
+                string fullPath = Path.GetFullPath(file);
+                DateTime lastEditTime = File.GetLastWriteTime(file);
+
+                var fileTable = new TomlTable
+                {
+                    ["lastModified"] = lastEditTime.ToString("o") // ISO формат
+                };
+
+                
+                toml[fullPath] = fileTable; 
+            }
         }
         private void ShowCfg()
         {

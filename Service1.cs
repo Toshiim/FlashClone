@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 using System.Management;
 using System.IO;
 using System.Text.RegularExpressions;
+using Tomlyn;
+using Tomlyn.Model;
+
 
 namespace FleshClone
 {
@@ -26,6 +29,8 @@ namespace FleshClone
         string Name = "";
         string OriginalPath = "";
         string ReservPath = "";
+
+        Dictionary<string, DateTime> EditTimeOfFiles; 
         protected override void OnStart(string[] args)
         {
 
@@ -63,12 +68,23 @@ namespace FleshClone
                 }
             }
         }
+
         private void USBReservCopyFiles()
         {
             //https://learn.microsoft.com/en-us/dotnet/api/system.io.directory?view=net-8.0
-            //string[] originalFiles = Directory.GetFileSystemEntries(OriginalPath);
+            GetTimeOfOriginal();
         }
 
+        private void GetTimeOfOriginal()
+        {
+            string[] originalFiles = Directory.GetFileSystemEntries(OriginalPath);
+            foreach (string file in originalFiles)
+            {
+                string path = Path.Combine(OriginalPath, file);
+                DateTime lastEditTime = File.GetLastWriteTime(path);
+                EditTimeOfFiles[path] = lastEditTime;
+            }
+        }
 
         private void LoadCFG()
         {
