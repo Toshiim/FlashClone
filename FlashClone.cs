@@ -22,6 +22,8 @@ namespace FleshClone
     {
         protected string cfg = "cfg.txt";
         protected string registred = "registred.toml";
+        public delegate void RecursedDirectoryEnum(string OriginalPath, TomlTable toml);
+        RecursedDirectoryEnum Registration = FilesRegistration; 
         public FlashClone()
         {
             InitializeComponent();
@@ -77,21 +79,21 @@ namespace FleshClone
             ShowCfg();
             var toml = new TomlTable();
             string originalPath = Opath.Text;//жуткий костыль
-            FilesRegistration(originalPath, toml);
+            RDE_Method(originalPath, toml, Registration);
             var tomlOut = Toml.FromModel(toml);
             File.WriteAllText(registred, tomlOut);
         }
-        private void FilesRegistration(string OriginalPath, TomlTable toml) //call FilesAppend for all of directorys
+        private void RDE_Method(string OriginalPath, TomlTable toml, RecursedDirectoryEnum RM) //call FilesAppend for all of directorys
         {
 
-            FilesAppend(OriginalPath, toml);
+            RM(OriginalPath, toml);
             string[] originalSubDirectories = Directory.GetDirectories(OriginalPath);
             foreach (string directory in originalSubDirectories)
             {
-                FilesRegistration(directory, toml);
+                RDE_Method(directory, toml, RM);
             }
         }
-        private void FilesAppend(string OriginalPath, TomlTable toml)//registred all files
+        static void FilesRegistration(string OriginalPath, TomlTable toml)//registred all files
         {
             string[] originalFiles = Directory.GetFiles(OriginalPath);//what if no files??
 
@@ -110,6 +112,7 @@ namespace FleshClone
                 toml[fullPath] = fileTable; 
             }
         }
+        //FilesCopying
         private void ShowCfg()
         {
             FIDLabel.Text = GetCfg("FID");
