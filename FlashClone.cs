@@ -63,25 +63,32 @@ namespace FleshClone
         }
         private void ButtonOriginal_Click(object sender, EventArgs e)
         {
+            string originalPath = string.Empty;
             using (FolderBrowserDialog folderBrowserDialog1 = new FolderBrowserDialog())
             {
                 folderBrowserDialog1.Description = "Select a folder on Flash-card to saving it";
-
+               
                 if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
                 {
-                    string flashPath = folderBrowserDialog1.SelectedPath;
-                    CfgUpdater("OriginalPath", $"{flashPath}");
-                    string driverLetter = flashPath[0].ToString();
+                    originalPath = folderBrowserDialog1.SelectedPath;
+                    CfgUpdater("OriginalPath", $"{originalPath}");
+                    string driverLetter = originalPath[0].ToString();
                     CfgUpdater("FID", GetVolumeSerialNumber(driverLetter));
                     CfgUpdater("Name", GetDeviceName(driverLetter));
                 }
             }
-            ShowCfg();
-            var toml = new TomlTable();
-            string originalPath = Opath.Text;//жуткий костыль
-            RDE_Method(originalPath, toml, Registration);
-            var tomlOut = Toml.FromModel(toml);
-            File.WriteAllText(registred, tomlOut);
+            if (!string.IsNullOrEmpty(originalPath)) 
+            {
+                ShowCfg();
+                var toml = new TomlTable();
+                RDE_Method(originalPath, toml, Registration);
+                var tomlOut = Toml.FromModel(toml);
+                File.WriteAllText(registred, tomlOut);
+            }
+            else
+            {
+                MessageBox.Show("Путь не был выбран.");
+            }
         }
         private void RDE_Method(string OriginalPath, TomlTable toml, RecursedDirectoryEnum RM) //call FilesAppend for all of directorys
         {
@@ -112,7 +119,11 @@ namespace FleshClone
                 toml[fullPath] = fileTable; 
             }
         }
+        //to do
         //FilesCopying
+        //подписка флэшки на копирование
+        //Parallel.ForEach
+
         private void ShowCfg()
         {
             FIDLabel.Text = GetCfg("FID");
