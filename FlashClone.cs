@@ -90,6 +90,10 @@ namespace FleshClone
                 MessageBox.Show("Путь не был выбран.");
             }
         }
+        private void buttonForCopy_Click(object sender, EventArgs e)
+        {
+
+        }
         private void RDE_Method(string OriginalPath, TomlTable toml, RecursedDirectoryEnum RM) //call FilesAppend for all of directorys
         {
 
@@ -123,7 +127,7 @@ namespace FleshClone
         //FilesCopying
         //подписка флэшки на копирование
         //Parallel.ForEach
-
+        // Global variable?
         private void ShowCfg()
         {
             FIDLabel.Text = GetCfg("FID");
