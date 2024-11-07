@@ -15,6 +15,7 @@ using static System.Windows.Forms.LinkLabel;
 using System.Management;
 using Tomlyn;
 using Tomlyn.Model;
+using System.Diagnostics;
 
 namespace FleshClone
 {
@@ -28,7 +29,9 @@ namespace FleshClone
         {
             InitializeComponent();
         }
-
+        string GlobOriginalPath = string.Empty;
+        string GlobReservPath = string.Empty;
+        Stopwatch stopwatch = new Stopwatch();
         private void FleshClone_Load(object sender, EventArgs e)
         {
             if (File.Exists(cfg))
@@ -56,32 +59,33 @@ namespace FleshClone
 
                 if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
                 {
-                    CfgUpdater("ReservPath", $"{folderBrowserDialog1.SelectedPath}");
+                    GlobReservPath = folderBrowserDialog1.SelectedPath;
+                    CfgUpdater("ReservPath", $"{GlobReservPath}");
                 }
             }
             ShowCfg();
         }
         private void ButtonOriginal_Click(object sender, EventArgs e)
         {
-            string originalPath = string.Empty;
+            
             using (FolderBrowserDialog folderBrowserDialog1 = new FolderBrowserDialog())
             {
                 folderBrowserDialog1.Description = "Select a folder on Flash-card to saving it";
                
                 if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
                 {
-                    originalPath = folderBrowserDialog1.SelectedPath;
-                    CfgUpdater("OriginalPath", $"{originalPath}");
-                    string driverLetter = originalPath[0].ToString();
+                    GlobOriginalPath = folderBrowserDialog1.SelectedPath;
+                    CfgUpdater("OriginalPath", $"{GlobOriginalPath}");
+                    string driverLetter = GlobOriginalPath[0].ToString();
                     CfgUpdater("FID", GetVolumeSerialNumber(driverLetter));
                     CfgUpdater("Name", GetDeviceName(driverLetter));
                 }
             }
-            if (!string.IsNullOrEmpty(originalPath)) 
+            if (!string.IsNullOrEmpty(GlobOriginalPath)) 
             {
                 ShowCfg();
                 var toml = new TomlTable();
-                RDE_Method(originalPath, toml, Registration);
+                RecursionIsolator(GlobOriginalPath, toml, Registration);
                 var tomlOut = Toml.FromModel(toml);
                 File.WriteAllText(registred, tomlOut);
             }
@@ -94,15 +98,24 @@ namespace FleshClone
         {
 
         }
-        private void RDE_Method(string OriginalPath, TomlTable toml, RecursedDirectoryEnum RM) //call FilesAppend for all of directorys
-        {
 
-            RM(OriginalPath, toml);
-            string[] originalSubDirectories = Directory.GetDirectories(OriginalPath);
+        private void RecursionIsolator(string Path, TomlTable toml, RecursedDirectoryEnum RM)
+        {
+            stopwatch.Start();
+            RDE_Method(Path, toml, RM);
+            stopwatch.Stop();
+            TimeLable.Text = stopwatch.Elapsed.TotalSeconds.ToString() + " sec";
+            stopwatch.Reset();
+        }
+        private void RDE_Method(string Path, TomlTable toml, RecursedDirectoryEnum RM) //call RM for all of directorys
+        {
+            RM(Path, toml);
+            string[] originalSubDirectories = Directory.GetDirectories(Path);
             foreach (string directory in originalSubDirectories)
             {
                 RDE_Method(directory, toml, RM);
             }
+
         }
         static void FilesRegistration(string OriginalPath, TomlTable toml)//registred all files
         {
@@ -127,7 +140,7 @@ namespace FleshClone
         //FilesCopying
         //подписка флэшки на копирование
         //Parallel.ForEach
-        // Global variable?
+        //порционное сохранение данных(записывать в файл после обработки каждой папки)
         private void ShowCfg()
         {
             FIDLabel.Text = GetCfg("FID");

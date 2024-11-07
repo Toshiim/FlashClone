@@ -36,6 +36,7 @@
             this.Spath = new System.Windows.Forms.Label();
             this.ButtonOriginal = new System.Windows.Forms.Button();
             this.buttonForCopy = new System.Windows.Forms.Button();
+            this.TimeLable = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // buttonBackUp
@@ -104,11 +105,21 @@
             this.buttonForCopy.UseVisualStyleBackColor = true;
             this.buttonForCopy.Click += new System.EventHandler(this.buttonForCopy_Click);
             // 
+            // TimeLable
+            // 
+            this.TimeLable.AutoSize = true;
+            this.TimeLable.Location = new System.Drawing.Point(409, 552);
+            this.TimeLable.Name = "TimeLable";
+            this.TimeLable.Size = new System.Drawing.Size(33, 13);
+            this.TimeLable.TabIndex = 11;
+            this.TimeLable.Text = "TIME";
+            // 
             // FlashClone
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(493, 574);
+            this.Controls.Add(this.TimeLable);
             this.Controls.Add(this.buttonForCopy);
             this.Controls.Add(this.ButtonOriginal);
             this.Controls.Add(this.Spath);
@@ -133,5 +144,6 @@
         private System.Windows.Forms.Label Spath;
         private System.Windows.Forms.Button ButtonOriginal;
         private System.Windows.Forms.Button buttonForCopy;
+        private System.Windows.Forms.Label TimeLable;
     }
 }
