@@ -41,9 +41,10 @@
             // 
             // buttonBackUp
             // 
-            this.buttonBackUp.Location = new System.Drawing.Point(329, 203);
+            this.buttonBackUp.Location = new System.Drawing.Point(370, 249);
+            this.buttonBackUp.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonBackUp.Name = "buttonBackUp";
-            this.buttonBackUp.Size = new System.Drawing.Size(104, 56);
+            this.buttonBackUp.Size = new System.Drawing.Size(139, 69);
             this.buttonBackUp.TabIndex = 3;
             this.buttonBackUp.Text = "Select folder for back ups";
             this.buttonBackUp.UseVisualStyleBackColor = true;
@@ -52,44 +53,49 @@
             // FlashName
             // 
             this.FlashName.AutoSize = true;
-            this.FlashName.Location = new System.Drawing.Point(12, 9);
+            this.FlashName.Location = new System.Drawing.Point(16, 11);
+            this.FlashName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.FlashName.Name = "FlashName";
-            this.FlashName.Size = new System.Drawing.Size(83, 13);
+            this.FlashName.Size = new System.Drawing.Size(101, 16);
             this.FlashName.TabIndex = 5;
             this.FlashName.Text = "NAME OF DISC";
             // 
             // FIDLabel
             // 
             this.FIDLabel.AutoSize = true;
-            this.FIDLabel.Location = new System.Drawing.Point(12, 38);
+            this.FIDLabel.Location = new System.Drawing.Point(16, 47);
+            this.FIDLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.FIDLabel.Name = "FIDLabel";
-            this.FIDLabel.Size = new System.Drawing.Size(63, 13);
+            this.FIDLabel.Size = new System.Drawing.Size(75, 16);
             this.FIDLabel.TabIndex = 6;
             this.FIDLabel.Text = "ID OF DISC";
             // 
             // Opath
             // 
             this.Opath.AutoSize = true;
-            this.Opath.Location = new System.Drawing.Point(56, 125);
+            this.Opath.Location = new System.Drawing.Point(44, 153);
+            this.Opath.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.Opath.Name = "Opath";
-            this.Opath.Size = new System.Drawing.Size(133, 13);
+            this.Opath.Size = new System.Drawing.Size(161, 16);
             this.Opath.TabIndex = 7;
             this.Opath.Text = "PATH TO ORIGINAL FILE";
             // 
             // Spath
             // 
             this.Spath.AutoSize = true;
-            this.Spath.Location = new System.Drawing.Point(56, 225);
+            this.Spath.Location = new System.Drawing.Point(44, 276);
+            this.Spath.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.Spath.Name = "Spath";
-            this.Spath.Size = new System.Drawing.Size(126, 13);
+            this.Spath.Size = new System.Drawing.Size(155, 16);
             this.Spath.TabIndex = 8;
             this.Spath.Text = "PATH TO RESERV FILE";
             // 
             // ButtonOriginal
             // 
-            this.ButtonOriginal.Location = new System.Drawing.Point(329, 104);
+            this.ButtonOriginal.Location = new System.Drawing.Point(370, 127);
+            this.ButtonOriginal.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.ButtonOriginal.Name = "ButtonOriginal";
-            this.ButtonOriginal.Size = new System.Drawing.Size(104, 54);
+            this.ButtonOriginal.Size = new System.Drawing.Size(139, 66);
             this.ButtonOriginal.TabIndex = 9;
             this.ButtonOriginal.Text = "Select Original File";
             this.ButtonOriginal.UseVisualStyleBackColor = true;
@@ -97,9 +103,10 @@
             // 
             // buttonForCopy
             // 
-            this.buttonForCopy.Location = new System.Drawing.Point(329, 304);
+            this.buttonForCopy.Location = new System.Drawing.Point(370, 373);
+            this.buttonForCopy.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonForCopy.Name = "buttonForCopy";
-            this.buttonForCopy.Size = new System.Drawing.Size(104, 23);
+            this.buttonForCopy.Size = new System.Drawing.Size(139, 28);
             this.buttonForCopy.TabIndex = 10;
             this.buttonForCopy.Text = "Copy";
             this.buttonForCopy.UseVisualStyleBackColor = true;
@@ -108,17 +115,18 @@
             // TimeLable
             // 
             this.TimeLable.AutoSize = true;
-            this.TimeLable.Location = new System.Drawing.Point(409, 552);
+            this.TimeLable.Location = new System.Drawing.Point(488, 629);
+            this.TimeLable.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.TimeLable.Name = "TimeLable";
-            this.TimeLable.Size = new System.Drawing.Size(33, 13);
+            this.TimeLable.Size = new System.Drawing.Size(39, 16);
             this.TimeLable.TabIndex = 11;
             this.TimeLable.Text = "TIME";
             // 
             // FlashClone
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(493, 574);
+            this.ClientSize = new System.Drawing.Size(590, 681);
             this.Controls.Add(this.TimeLable);
             this.Controls.Add(this.buttonForCopy);
             this.Controls.Add(this.ButtonOriginal);
@@ -127,6 +135,7 @@
             this.Controls.Add(this.FIDLabel);
             this.Controls.Add(this.FlashName);
             this.Controls.Add(this.buttonBackUp);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "FlashClone";
             this.Text = "FleshClone";
             this.Load += new System.EventHandler(this.FleshClone_Load);

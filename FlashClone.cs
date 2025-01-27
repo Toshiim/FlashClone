@@ -21,10 +21,10 @@ namespace FleshClone
 {
     public partial class FlashClone : Form
     {
-        protected string cfg = "cfg.txt";
+        protected string cfg = "cfg.toml";
         protected string registred = "registred.toml";
         public delegate void RecursedDirectoryEnum(string OriginalPath, TomlTable toml);
-        RecursedDirectoryEnum Registration = FilesRegistration; 
+        RecursedDirectoryEnum Registration = FilesRegistration;
         public FlashClone()
         {
             InitializeComponent();
@@ -41,13 +41,14 @@ namespace FleshClone
             else
             {
                 File.Create(cfg).Dispose();
-                string[] lines = {
-                    "FID: ND",
-                    "Name: ND",
-                    "OriginalPath: ND",
-                    "ReservPath: ND"
+                var toml = new TomlTable
+                {
+                    ["FID"] = "ND",
+                    ["Name"] = "ND",
+                    ["OriginalPath"] = "ND",
+                    ["ReservPath"] = "ND"
                 };
-                File.WriteAllLines(cfg, lines);
+                File.WriteAllText(cfg, Toml.FromModel(toml));
             }
         }
 
@@ -67,11 +68,11 @@ namespace FleshClone
         }
         private void ButtonOriginal_Click(object sender, EventArgs e)
         {
-            
+
             using (FolderBrowserDialog folderBrowserDialog1 = new FolderBrowserDialog())
             {
                 folderBrowserDialog1.Description = "Select a folder on Flash-card to saving it";
-               
+
                 if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
                 {
                     GlobOriginalPath = folderBrowserDialog1.SelectedPath;
@@ -81,7 +82,7 @@ namespace FleshClone
                     CfgUpdater("Name", GetDeviceName(driverLetter));
                 }
             }
-            if (!string.IsNullOrEmpty(GlobOriginalPath)) 
+            if (!string.IsNullOrEmpty(GlobOriginalPath)) //Registration
             {
                 ShowCfg();
                 var toml = new TomlTable();
@@ -96,7 +97,10 @@ namespace FleshClone
         }
         private void buttonForCopy_Click(object sender, EventArgs e)
         {
-
+            var toml = new TomlTable();
+            RecursionIsolator(GlobOriginalPath, toml, Registration);
+            var tomlOut = Toml.FromModel(toml);
+            File.WriteAllText(registred, tomlOut);
         }
 
         private void RecursionIsolator(string Path, TomlTable toml, RecursedDirectoryEnum RM)
@@ -132,8 +136,27 @@ namespace FleshClone
                     ["lastModified"] = lastEditTime.ToString("o") // ISO формат
                 };
 
-                
-                toml[fullPath] = fileTable; 
+
+                toml[fullPath] = fileTable;
+            }
+        }
+        static void FilesCopying(string OriginalPath, TomlTable toml)
+        {
+            string[] originalFiles = Directory.GetFiles(OriginalPath);//what if no files??
+
+            foreach (string file in originalFiles)
+            {
+
+                string fullPath = Path.GetFullPath(file);
+                DateTime lastEditTime = File.GetLastWriteTime(file);
+
+                var fileTable = new TomlTable
+                {
+                    ["lastModified"] = lastEditTime.ToString("o") // ISO формат
+                };
+
+
+                toml[fullPath] = fileTable;
             }
         }
         //to do
@@ -141,31 +164,11 @@ namespace FleshClone
         //подписка флэшки на копирование
         //Parallel.ForEach
         //порционное сохранение данных(записывать в файл после обработки каждой папки)
-        private void ShowCfg()
-        {
-            FIDLabel.Text = GetCfg("FID");
-            FlashName.Text = GetCfg("Name");
-            Opath.Text = GetCfg("OriginalPath");
-            Spath.Text = GetCfg("ReservPath");
-        }
-        private string GetCfg(string keyName)
-        {
-            string[] lines = File.ReadAllLines(cfg);
-            string pattern = $@"^{keyName}:.*";
-            foreach (string line in lines)
-            {
-                if(Regex.IsMatch(line, pattern))
-                {
-                    string respons = "";
-                    for(int i = keyName.Length + 2; i < line.Length; i++)
-                    {
-                        respons += line[i].ToString();
-                    }
-                    return respons;
-                }
-            }
-            return null;
-        }
+        //Древовидная структура
+        //Загрузка переменных путей из cfg
+        //Проверка при копировании выбранны ли  пути
+        //
+
         static string GetVolumeSerialNumber(string driveLetter)
         {
             try
@@ -183,7 +186,7 @@ namespace FleshClone
                 Console.WriteLine($"Ошибка: {ex.Message}");
             }
 
-            return null; 
+            return null;
         }
         static string GetDeviceName(string driveLetter)
         {
@@ -213,28 +216,24 @@ namespace FleshClone
                 Console.WriteLine($"Ошибка: {ex.Message}");
             }
 
-            return null; 
+            return null;
+        }
+        private void ShowCfg()
+        {
+            var toml = Toml.ToModel(File.ReadAllText(cfg)) as TomlTable;
+            FIDLabel.Text = toml["FID"]?.ToString();
+            FlashName.Text = toml["Name"]?.ToString();
+            Opath.Text = toml["OriginalPath"]?.ToString();
+            Spath.Text = toml["ReservPath"]?.ToString();
         }
 
         private void CfgUpdater(string keyName, string newData)
         {
-            string[] lines = File.ReadAllLines(cfg);
-            string pattern = $@"^{keyName}:.*";
-
-            for (int i = 0; i < lines.Length; i++)
-
-            {
-                if (Regex.IsMatch(lines[i], pattern))
-                {
-
-                    lines[i] = $"{keyName}: " + newData;
-                    break;
-                }
-            }
-            File.WriteAllLines(cfg, lines);
-
+            var toml = Toml.ToModel(File.ReadAllText(cfg)) as TomlTable;
+            toml[keyName] = newData;
+            File.WriteAllText(cfg, Toml.FromModel(toml));
         }
-
+        
 
     }
 }
