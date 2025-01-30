@@ -16,22 +16,24 @@ using System.Management;
 using Tomlyn;
 using Tomlyn.Model;
 using System.Diagnostics;
+using Newtonsoft.Json;
 
 namespace FleshClone
 {
     public partial class FlashClone : Form
     {
         protected string cfg = "cfg.toml";
-        protected string registred = "registred.toml";
-        public delegate void RecursedDirectoryEnum(string OriginalPath, TomlTable toml);
+        protected string registred = "registred.json";
+        public delegate void RecursedDirectoryEnum(string OriginalPath, Dictionary<string, object> jsonTree);
         RecursedDirectoryEnum Registration = FilesRegistration;
+
+        string GlobOriginalPath = string.Empty;
+        string GlobReservPath = string.Empty;
+        Stopwatch stopwatch = new Stopwatch();
         public FlashClone()
         {
             InitializeComponent();
         }
-        string GlobOriginalPath = string.Empty;
-        string GlobReservPath = string.Empty;
-        Stopwatch stopwatch = new Stopwatch();
         private void FleshClone_Load(object sender, EventArgs e)
         {
             if (File.Exists(cfg))
@@ -71,7 +73,7 @@ namespace FleshClone
 
             using (FolderBrowserDialog folderBrowserDialog1 = new FolderBrowserDialog())
             {
-                folderBrowserDialog1.Description = "Select a folder on Flash-card to saving it";
+                folderBrowserDialog1.Description = "Select a folder on Flash-card to save";
 
                 if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
                 {
@@ -85,10 +87,9 @@ namespace FleshClone
             if (!string.IsNullOrEmpty(GlobOriginalPath)) //Registration
             {
                 ShowCfg();
-                var toml = new TomlTable();
-                RecursionIsolator(GlobOriginalPath, toml, Registration);
-                var tomlOut = Toml.FromModel(toml);
-                File.WriteAllText(registred, tomlOut);
+                var jsonTree = new Dictionary<string, object>(); //RI?
+                RecursionIsolator(GlobOriginalPath, jsonTree, Registration);
+                File.WriteAllText(registred, JsonConvert.SerializeObject(jsonTree, Formatting.Indented)); //RI?
             }
             else
             {
@@ -97,31 +98,31 @@ namespace FleshClone
         }
         private void buttonForCopy_Click(object sender, EventArgs e)
         {
-            var toml = new TomlTable();
-            RecursionIsolator(GlobOriginalPath, toml, Registration);
-            var tomlOut = Toml.FromModel(toml);
-            File.WriteAllText(registred, tomlOut);
+            //var toml = new TomlTable();
+            //RecursionIsolator(GlobOriginalPath, toml, Registration);
+            //var tomlOut = Toml.FromModel(toml);
+            //File.WriteAllText(registred, tomlOut);
         }
 
-        private void RecursionIsolator(string Path, TomlTable toml, RecursedDirectoryEnum RM)
+        private void RecursionIsolator(string path, Dictionary<string, object> jsonTree, RecursedDirectoryEnum RM)
         {
             stopwatch.Start();
-            RDE_Method(Path, toml, RM);
+            RDE_Method(path, jsonTree, RM);
             stopwatch.Stop();
             TimeLable.Text = stopwatch.Elapsed.TotalSeconds.ToString() + " sec";
             stopwatch.Reset();
         }
-        private void RDE_Method(string Path, TomlTable toml, RecursedDirectoryEnum RM) //call RM for all of directorys
+        private void RDE_Method(string Path, Dictionary<string, object> jsonTree, RecursedDirectoryEnum RM) //call RM for all of directorys
         {
-            RM(Path, toml);
+            RM(Path, jsonTree);
             string[] originalSubDirectories = Directory.GetDirectories(Path);
             foreach (string directory in originalSubDirectories)
             {
-                RDE_Method(directory, toml, RM);
+                RDE_Method(directory, jsonTree, RM);
             }
 
         }
-        static void FilesRegistration(string OriginalPath, TomlTable toml)//registred all files
+        static void FilesRegistration(string OriginalPath, Dictionary<string, object> jsonTree)//registred all files
         {
             string[] originalFiles = Directory.GetFiles(OriginalPath);//what if no files??
 
@@ -131,13 +132,12 @@ namespace FleshClone
                 string fullPath = Path.GetFullPath(file);
                 DateTime lastEditTime = File.GetLastWriteTime(file);
 
-                var fileTable = new TomlTable
+                var fileData = new Dictionary<string, string>
                 {
                     ["lastModified"] = lastEditTime.ToString("o") // ISO формат
                 };
 
-
-                toml[fullPath] = fileTable;
+                jsonTree[fullPath] = fileData;
             }
         }
         static void FilesCopying(string OriginalPath, TomlTable toml)
