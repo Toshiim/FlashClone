@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
@@ -45,10 +42,10 @@ namespace FleshClone
                 File.Create(cfg).Dispose();
                 var toml = new TomlTable
                 {
-                    ["FID"] = "ND",
-                    ["Name"] = "ND",
-                    ["OriginalPath"] = "ND",
-                    ["ReservPath"] = "ND"
+                    ["FID"] = FIDLabel.Text,
+                    ["Name"] = FlashName.Text,
+                    ["OriginalPath"] = Opath.Text,
+                    ["ReservPath"] = Spath.Text,
                 };
                 File.WriteAllText(cfg, Toml.FromModel(toml));
             }
@@ -140,7 +137,7 @@ namespace FleshClone
                 jsonTree[fullPath] = fileData;
             }
         }
-        static void FilesCopying(string OriginalPath, TomlTable toml)
+        static void FilesCopying(string OriginalPath, Dictionary<string, object> jsonTree)
         {
             string[] originalFiles = Directory.GetFiles(OriginalPath);//what if no files??
 
@@ -150,13 +147,13 @@ namespace FleshClone
                 string fullPath = Path.GetFullPath(file);
                 DateTime lastEditTime = File.GetLastWriteTime(file);
 
-                var fileTable = new TomlTable
+                var fileTable = new Dictionary<string, string>
                 {
                     ["lastModified"] = lastEditTime.ToString("o") // ISO формат
                 };
 
 
-                toml[fullPath] = fileTable;
+                jsonTree[fullPath] = fileTable;
             }
         }
         //to do
