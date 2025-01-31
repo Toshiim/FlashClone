@@ -97,12 +97,42 @@ namespace FleshClone
         }
         private void buttonForCopy_Click(object sender, EventArgs e)
         {
-            //var toml = new TomlTable();
-            //RecursionIsolator(GlobOriginalPath, toml, Registration);
+            if (File.Exists(registred))
+            {
+                string json = File.ReadAllText(registred);
+                var jsonTree = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+                RecursionIsolator(GlobOriginalPath, jsonTree, FilesCopying);
+                var resulTree = new Dictionary<string, object>();
+                resulTree[Path.GetFileName(GlobOriginalPath)] = jsonTree;
+                File.WriteAllText(registred, JsonConvert.SerializeObject(resulTree, Formatting.Indented));
+            }
+            else
+            {
+                MessageBox.Show("Файл не выбран или не зарегестрирован");
+            }
+
             //var tomlOut = Toml.FromModel(toml);
             //File.WriteAllText(registred, tomlOut);
         }
+        static void FilesCopying(string OriginalPath, Dictionary<string, object> jsonTree)
+        {
+            string[] originalFiles = Directory.GetFiles(OriginalPath);//what if no files??
 
+            foreach (string file in originalFiles)
+            {
+
+                string fullPath = Path.GetFullPath(file);
+                DateTime lastEditTime = File.GetLastWriteTime(file);
+
+                var fileTable = new Dictionary<string, string>
+                {
+                    ["lastModified"] = lastEditTime.ToString("o") // ISO формат
+                };
+
+
+                jsonTree[fullPath] = fileTable;
+            }
+        }
         private void RecursionIsolator(string path, Dictionary<string, object> jsonTree, RecursedDirectoryEnum RM)
         {
             stopwatch.Start();
@@ -128,7 +158,7 @@ namespace FleshClone
 
         static void FilesRegistration(string OriginalPath, Dictionary<string, object> jsonTree)//registred all files
         {
-            jsonTree["lastDirModified"] = Directory.GetLastWriteTime(OriginalPath).ToString("o");
+            jsonTree["LDM"] = Directory.GetLastWriteTime(OriginalPath).ToString("yyyy-MM-ddTHH:mm:sszzz"); //LastDirModified
             string[] originalFiles = Directory.GetFiles(OriginalPath);//what if no files??
 
             var filesData = new Dictionary<string, object>();
@@ -138,32 +168,17 @@ namespace FleshClone
                 DateTime lastEditTime = File.GetLastWriteTime(file);
                 filesData[Path.GetFileName(file)] = new Dictionary<string, string>
                 {
-                    ["lastFileModified"] = lastEditTime.ToString("o")
+                    ["LFM"] = lastEditTime.ToString("yyyy-MM-ddTHH:mm:sszzz") // LastFileModified 
                 };
             }
             jsonTree["files"] = filesData;
         }
-        static void FilesCopying(string OriginalPath, Dictionary<string, object> jsonTree)
-        {
-            string[] originalFiles = Directory.GetFiles(OriginalPath);//what if no files??
 
-            foreach (string file in originalFiles)
-            {
-
-                string fullPath = Path.GetFullPath(file);
-                DateTime lastEditTime = File.GetLastWriteTime(file);
-
-                var fileTable = new Dictionary<string, string>
-                {
-                    ["lastModified"] = lastEditTime.ToString("o") // ISO формат
-                };
-
-
-                jsonTree[fullPath] = fileTable;
-            }
-        }
+        //
         //to do
+        //sign RecursionIsolater -> json | RM ???
         //Разобратся с resulTree & jsonTree
+        // Разобратся с глобальными и локальными путями(избыточны)
         //FilesCopying
         //подписка флэшки на копирование
         //Parallel.ForEach

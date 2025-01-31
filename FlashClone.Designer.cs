@@ -42,7 +42,7 @@
             // buttonBackUp
             // 
             this.buttonBackUp.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.buttonBackUp.Location = new System.Drawing.Point(370, 259);
+            this.buttonBackUp.Location = new System.Drawing.Point(370, 206);
             this.buttonBackUp.Margin = new System.Windows.Forms.Padding(4);
             this.buttonBackUp.Name = "buttonBackUp";
             this.buttonBackUp.Size = new System.Drawing.Size(139, 51);
@@ -75,7 +75,7 @@
             // 
             this.Opath.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.Opath.AutoSize = true;
-            this.Opath.Location = new System.Drawing.Point(44, 153);
+            this.Opath.Location = new System.Drawing.Point(44, 100);
             this.Opath.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.Opath.Name = "Opath";
             this.Opath.Size = new System.Drawing.Size(161, 16);
@@ -86,7 +86,7 @@
             // 
             this.Spath.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.Spath.AutoSize = true;
-            this.Spath.Location = new System.Drawing.Point(44, 276);
+            this.Spath.Location = new System.Drawing.Point(44, 223);
             this.Spath.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.Spath.Name = "Spath";
             this.Spath.Size = new System.Drawing.Size(155, 16);
@@ -96,7 +96,7 @@
             // ButtonOriginal
             // 
             this.ButtonOriginal.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.ButtonOriginal.Location = new System.Drawing.Point(370, 140);
+            this.ButtonOriginal.Location = new System.Drawing.Point(370, 87);
             this.ButtonOriginal.Margin = new System.Windows.Forms.Padding(4);
             this.ButtonOriginal.Name = "ButtonOriginal";
             this.ButtonOriginal.Size = new System.Drawing.Size(139, 42);
@@ -108,7 +108,7 @@
             // buttonForCopy
             // 
             this.buttonForCopy.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.buttonForCopy.Location = new System.Drawing.Point(370, 373);
+            this.buttonForCopy.Location = new System.Drawing.Point(370, 317);
             this.buttonForCopy.Margin = new System.Windows.Forms.Padding(4);
             this.buttonForCopy.Name = "buttonForCopy";
             this.buttonForCopy.Size = new System.Drawing.Size(139, 28);
@@ -121,7 +121,7 @@
             // 
             this.TimeLable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.TimeLable.AutoSize = true;
-            this.TimeLable.Location = new System.Drawing.Point(470, 656);
+            this.TimeLable.Location = new System.Drawing.Point(470, 550);
             this.TimeLable.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.TimeLable.Name = "TimeLable";
             this.TimeLable.Size = new System.Drawing.Size(39, 16);
@@ -132,7 +132,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(565, 681);
+            this.ClientSize = new System.Drawing.Size(565, 575);
             this.Controls.Add(this.TimeLable);
             this.Controls.Add(this.buttonForCopy);
             this.Controls.Add(this.ButtonOriginal);
