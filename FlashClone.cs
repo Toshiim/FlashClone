@@ -36,6 +36,7 @@ namespace FleshClone
             if (File.Exists(cfg))
             {
                 ShowCfg();
+                LoadGlob();
             }
             else
             {
@@ -99,12 +100,31 @@ namespace FleshClone
         {
             if (File.Exists(registred))
             {
+                MessageBox.Show(GlobOriginalPath);
                 string json = File.ReadAllText(registred);
                 var jsonTree = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
-                RecursionIsolator(GlobOriginalPath, jsonTree, FilesCopying);
-                var resulTree = new Dictionary<string, object>();
-                resulTree[Path.GetFileName(GlobOriginalPath)] = jsonTree;
-                File.WriteAllText(registred, JsonConvert.SerializeObject(resulTree, Formatting.Indented));
+                DateTime currentFolderTime = Directory.GetLastWriteTime(GlobOriginalPath);
+                if (jsonTree.ContainsKey("LDM") && DateTime.TryParse(jsonTree["LDM"].ToString(), out DateTime storedFolderTime)) // Проблема: обращение к первому эл как к ldr   а не как назвванию папки.
+                {
+                    MessageBox.Show("Help");
+                    if (currentFolderTime > storedFolderTime)
+                    {
+                        MessageBox.Show("Папка была изменена");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Папка НЕ была изменена");
+
+                    }
+                    //RecursionIsolator(GlobOriginalPath, jsonTree, FilesCopying);
+                    //var resulTree = new Dictionary<string, object>();
+                    //resulTree[Path.GetFileName(GlobOriginalPath)] = jsonTree;
+                    //File.WriteAllText(registred, JsonConvert.SerializeObject(resulTree, Formatting.Indented));
+                }
+                else
+                {
+                    MessageBox.Show("Unexpected Error");
+                }
             }
             else
             {
@@ -245,7 +265,12 @@ namespace FleshClone
             Opath.Text = toml["OriginalPath"]?.ToString();
             Spath.Text = toml["ReservPath"]?.ToString();
         }
-
+        private void LoadGlob()
+        {
+            var toml = Toml.ToModel(File.ReadAllText(cfg)) as TomlTable;
+            GlobOriginalPath = toml["OriginalPath"]?.ToString();
+            GlobReservPath = toml["ReservPath"]?.ToString();
+        }
         private void CfgUpdater(string keyName, string newData)
         {
             var toml = Toml.ToModel(File.ReadAllText(cfg)) as TomlTable;
